@@ -1,12 +1,19 @@
+import logging
 import os
 import base64
 
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 
+
+logging.basicConfig(filename='example.log',level=logging.DEBUG)
+logging.debug('This message should go to the log file')
+logging.info('So should this')
+logging.warning('And this, too')
 
 from model import Donation, Donor
 
 app = Flask(__name__)
+app.secret_key = b'\x9d\xb1u\x08%\xe0\xd0p\x9bEL\xf8JC\xa3\xf4J(hAh\xa4\xcdw\x12S*,u\xec\xb8\xb8'
 
 
 @app.route('/')
@@ -25,11 +32,16 @@ def create():
 
     if request.method == 'POST':
         donor = Donor(name=request.form['name'])
-        donor.save()
+        donor.save(donor)
+        logging.info('Trying to add name')
 
-    if request.method == 'POST':
-        donation = Donation(name=request.form['donation'])
-        donation.save()
+    # if request.method == 'POST':
+    #     donor = Donor(name=request.form['name'])
+    #     donor.save()
+
+    # if request.method == 'POST':
+    #     donation = Donation(name=request.form['donation'])
+    #     donation.save()
 
         return redirect(url_for('home'))
     else:
