@@ -27,25 +27,24 @@ def all():
     return render_template('donations.jinja2', donations=donations)
 
 
-@app.route('/create/', methods=['GET', 'POST'])
-def create():
+@app.route('/add/', methods=['GET', 'POST'])
+def add():
+    if request.method == 'GET':
+        return render_template('add.jinja2')
+    else:
+        donor_name = Donor(name=request.form['name'])
+        donation_amount = request.form['donation']
+        
+        #find the donor using peewee wrapper
+        donor = Donor.select().where(Donor.name == donor_name).get()
 
-    if request.method == 'POST':
-        donor = Donor(name=request.form['name'])
-        donor.save(donor)
+        # Make a donation entry peewee object
+        donation = Donation(value=donation_amount, donor=donor)
+        donor = Donor(donor_name)
+        donation.save()
         logging.info('Trying to add name')
 
-    # if request.method == 'POST':
-    #     donor = Donor(name=request.form['name'])
-    #     donor.save()
-
-    # if request.method == 'POST':
-    #     donation = Donation(name=request.form['donation'])
-    #     donation.save()
-
         return redirect(url_for('home'))
-    else:
-        return render_template('create.jinja2')
 
 
 if __name__ == "__main__":
