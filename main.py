@@ -34,15 +34,14 @@ def add():
     else:
         donor_name = Donor(name=request.form['name'])
         donation_amount = request.form['donation']
-        
-        #find the donor using peewee wrapper
+
+        # find the donor using peewee wrapper
         donor = Donor.select().where(Donor.name == donor_name).get()
 
         # Make a donation entry peewee object
-        donation = Donation(value=donation_amount, donor=donor)
-        donor = Donor(donor_name)
+        donation = Donation(value=donation_amount, donor=donor_name)
+        donor = Donor(donor)
         donation.save()
-        logging.info('Trying to add name')
 
         return redirect(url_for('home'))
 
