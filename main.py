@@ -25,17 +25,16 @@ def donate():
         try:
             donor = Donor.select().where(Donor.name == request.values.get('name')).get()
         except peewee.DoesNotExist:
-            donor = ""
+            donor = Donor(name=request.values.get('name'))
+            donor.save()
         except Exception as e:
             print(f'{e}', file=sys.stderr)
+            donor = None
+            
         if donor:
             donation = Donation(donor=donor, value=request.values.get('donation'))
             donation.save()
-        else:
-            new_donor = Donor(name=request.values.get('name'))
-            new_donor.save()
-            donation = Donation(donor=new_donor, value=request.values.get('donation'))
-            donation.save()
+
         return redirect(url_for('all'))
     else:
         return render_template('donate.jinja2')
